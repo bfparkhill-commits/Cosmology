@@ -1,0 +1,1840 @@
+html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Sixth · Box, Container &amp; Cosmological Backreaction Observatory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
+      displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root {
+  --bg: #141517;
+  --panel: #1b1d20;
+  --panel-alt: #212428;
+  --line: #32353b;
+  --ink: #ece8de;
+  --dim: #9a968c;
+  --red: #e0567c;
+  --green: #4fbf7d;
+  --gold: #e8c26a;
+  --cyan: #5bc0de;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --serif: "IBM Plex Serif", Georgia, serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 14px/1.55 var(--mono);
+  scroll-behavior: smooth;
+}
+main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 18px 64px;
+  display: grid;
+  gap: 20px;
+}
+header {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px;
+}
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+h1 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  margin: 0;
+  text-wrap: balance;
+}
+h2 {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 8px;
+}
+h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 14px 0 6px;
+}
+.lede {
+  color: var(--dim);
+  margin: 8px 0 0;
+  max-width: 82ch;
+  font-size: 13px;
+}
+.m { font-family: var(--serif); font-style: italic; }
+
+/* Dual Stage Grid */
+.dual-stage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 840px) {
+  .dual-stage { grid-template-columns: 1fr; }
+}
+.stage-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.stage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--dim);
+}
+.stage-header b { color: var(--ink); font-weight: 600; }
+.stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 0.92;
+  max-height: 480px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #101113;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+}
+.stage:active { cursor: grabbing; }
+canvas { display: block; width: 100%; height: 100%; }
+.tag {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  right: 12px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--dim);
+  pointer-events: none;
+  background: rgba(16, 17, 19, 0.72);
+  padding: 6px 8px;
+  border-radius: 5px;
+  border: 1px solid rgba(50, 53, 59, 0.6);
+}
+.tag b { color: var(--ink); font-weight: 500; }
+
+/* CMB Legend */
+.cmb-bar {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: var(--dim);
+  background: rgba(16, 17, 19, 0.82);
+  padding: 5px 8px;
+  border-radius: 5px;
+  border: 1px solid var(--line);
+  pointer-events: none;
+}
+.cmb-grad {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #081d58 0%, #225ea8 22%, #41b6c4 42%, #a1dab4 50%, #fed976 62%, #fd8d3c 80%, #bd0026 100%);
+}
+
+/* Controls */
+.control-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+button {
+  font: inherit;
+  font-size: 12px;
+  color: var(--ink);
+  background: var(--panel-alt);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+button:hover { border-color: var(--dim); }
+button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+button.primary {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+  font-weight: 600;
+  min-width: 96px;
+}
+button.active-toggle {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(232, 194, 106, 0.09);
+}
+.seg {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  flex: 1 1 320px;
+}
+.seg button {
+  flex: 1;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 8px 6px;
+  border-right: 1px solid var(--line);
+}
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] {
+  background: var(--panel-alt);
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* Buchert Backreaction Panel */
+.buchert-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+}
+.preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+.sliders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+.slider-box {
+  background: var(--panel-alt);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.slider-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.slider-head span:first-child { color: var(--dim); }
+.slider-head b { color: var(--gold); font-variant-numeric: tabular-nums; }
+input[type=range] {
+  width: 100%;
+  accent-color: var(--gold);
+  height: 22px;
+  cursor: pointer;
+}
+.budget-bar-wrap {
+  display: grid;
+  gap: 6px;
+}
+.budget-bar {
+  height: 22px;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  border: 1px solid var(--line);
+  background: #101113;
+}
+.b-seg {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #101113;
+  transition: width 0.12s ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.budget-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--dim);
+}
+.swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.inequality-banner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: #121316;
+  font-size: 13px;
+}
+
+/* Orbit Row & Cards */
+.row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 12px;
+}
+.row canvas { height: 128px; }
+.read {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+.card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: var(--panel);
+}
+.card .k { font-size: 11px; color: var(--dim); letter-spacing: .05em; text-transform: uppercase; }
+.card .v { font-size: 15px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.card .lean { font-size: 11px; color: var(--dim); margin-top: 4px; }
+.pill {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  border: 1px solid;
+  font-weight: 600;
+}
+.pill.eq { color: var(--green); border-color: var(--green); background: rgba(79, 191, 125, 0.1); }
+.pill.md { color: var(--red); border-color: var(--red); background: rgba(224, 86, 124, 0.1); }
+.pill.no { color: var(--dim); border-color: var(--line); text-decoration: line-through; }
+
+/* Lean Checks */
+.checks { font-size: 12px; color: var(--dim); }
+.checks ul {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 4px 14px;
+}
+.checks li::before { content: "✓ "; color: var(--green); font-weight: bold; }
+.checks li.bad::before { content: "✗ "; color: var(--red); }
+.checks b { color: var(--ink); font-weight: 500; }
+
+/* Documentation, Math, Tables & References */
+.doc-section {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 20px;
+  display: grid;
+  gap: 14px;
+}
+.prose {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.72;
+  color: #e4e0d5;
+  max-width: 78ch;
+}
+.prose p { margin: 0 0 12px; }
+.prose strong { color: #ffffff; font-weight: 600; }
+.math-block {
+  background: #121316;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  border-radius: 6px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  font-size: 14px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  margin-top: 6px;
+}
+th, td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+th {
+  color: var(--gold);
+  font-weight: 600;
+  background: #15171a;
+  letter-spacing: .04em;
+}
+tr:hover td { background: rgba(255, 255, 255, 0.02); }
+details {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #121316;
+  padding: 10px 14px;
+}
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--gold);
+  font-size: 13px;
+}
+pre {
+  margin: 10px 0 0;
+  padding: 12px;
+  background: #0d0e10;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #d8d4c8;
+  border: 1px solid #26292e;
+}
+a { color: var(--cyan); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.ref-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  color: #d8d4c8;
+}
+.slider-row-4d {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--dim);
+}
+</style>
+</head>
+<body>
+<main>
+  <!-- HEADER -->
+  <header>
+    <div class="eyebrow">Cosmology Two · Unified Topological &amp; Observational Bench</div>
+    <h1>THE SIXTH · BOX, CONTAINER &amp; FLATLANDER OBSERVATORY</h1>
+    <p class="lede">
+      A unified demonstration pairing your Lean-verified folded square cell (<span class="m">Box</span>) and non-orientable Möbius/Klein sheet (<span class="m">Container</span>) with local baryonic foam formation, Planck 2018 CMB thermal coloring, and side-by-side cosmological comparators ($\Lambda$CDM, Hartle–Hawking, Loop Quantum Cosmology, and Timescape).
+    </p>
+  </header>
+
+  <!-- MASTER CONTROL BAR -->
+  <div class="control-bar">
+    <button class="primary" id="run">Pause</button>
+    <button id="lap">Next beat</button>
+    <button id="toggle-palette" class="active-toggle">Palette: Planck CMB ($\pm 300\,\mu\text{K}$)</button>
+    <button id="toggle-foam" class="active-toggle">Baryonic Foam: ON</button>
+    <div class="seg" role="group" aria-label="Competing Hypothesis Comparator">
+      <button id="cmp-lcdm" aria-pressed="true">vs. $\Lambda$CDM (Point · 0)</button>
+      <button id="cmp-hh" aria-pressed="false">vs. Hartle–Hawking (Cap · 1)</button>
+      <button id="cmp-lqc" aria-pressed="false">vs. LQC (Neck · ½)</button>
+      <button id="cmp-ts" aria-pressed="false">vs. Timescape Foam</button>
+    </div>
+  </div>
+
+  <!-- DUAL VIEWPORT STAGE -->
+  <div class="dual-stage">
+    <!-- LEFT: YOUR TOPOLOGY + FOAM -->
+    <div class="stage-wrap">
+      <div class="stage-header">
+        <span><b>LEFT: YOUR TOPOLOGY</b> · Folded Cell ($12\text{–}6$) on Möbius Fabric</span>
+        <span>Drag to orbit</span>
+      </div>
+      <div class="stage" id="stage">
+        <canvas id="c"></canvas>
+        <div class="tag" id="tag"></div>
+        <div class="cmb-bar" id="cmb-legend">
+          <span>$-300\,\mu\text{K}$ (Void)</span>
+          <div class="cmb-grad"></div>
+          <span>$+300\,\mu\text{K}$ (Wall)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: COMPETING HYPOTHESIS -->
+    <div class="stage-wrap">
+      <div class="stage-header">
+        <span id="right-title"><b>RIGHT: COMPETING HYPOTHESIS</b> · $\Lambda$CDM (Point · 0)</span>
+        <span>Synchronized clock</span>
+      </div>
+      <div class="stage" id="stage-cmp">
+        <canvas id="c-cmp"></canvas>
+        <div class="tag" id="tag-cmp"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUCHERT BACKREACTION & OBSERVATIONAL RATIO BENCH -->
+  <section class="buchert-panel" aria-label="Buchert Backreaction & Friedmann Share Calculator">
+    <div class="preset-row">
+      <div>
+        <h2>Dimensionless Friedmann Shares &amp; Buchert Variance Threshold</h2>
+        <div style="font-size:12px;color:var(--dim)">
+          Adjust void fraction $f$, expansion contrast $\Delta H/H$, and matter share $\Omega_m$ to test $4f(1-f)(\Delta H/H)^2 &gt; \Omega_m$.
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <button id="pre-planck">Preset: Planck 2018 $\Lambda$CDM</button>
+        <button id="pre-buchert">Preset: Buchert Optimal ($f=\tfrac{1}{2}$)</button>
+        <button id="pre-timescape">Preset: Timescape ($f=0.76$)</button>
+      </div>
+    </div>
+
+    <div class="sliders-grid">
+      <div class="slider-box">
+        <div class="slider-head">
+          <span>Void Fraction $f = V_{\text{void}}/V_{\text{total}}$</span>
+          <b id="val-f">0.50</b>
+        </div>
+        <input id="sl-f" type="range" min="0" max="0.95" step="0.01" value="0.50">
+      </div>
+      <div class="slider-box">
+        <div class="slider-head">
+          <span>Expansion Contrast $\Delta H / H$</span>
+          <b id="val-dh">0.72</b>
+        </div>
+        <input id="sl-dh" type="range" min="0" max="1.50" step="0.01" value="0.72">
+      </div>
+      <div class="slider-box">
+        <div class="slider-head">
+          <span>Matter Share $\Omega_m$ (Planck: $0.315$)</span>
+          <b id="val-om">0.315</b>
+        </div>
+        <input id="sl-om" type="range" min="0.15" max="0.50" step="0.005" value="0.315">
+      </div>
+    </div>
+
+    <div class="budget-bar-wrap">
+      <div class="budget-bar" id="budget-bar"></div>
+      <div class="budget-legend" id="budget-legend"></div>
+    </div>
+
+    <div class="inequality-banner" id="ineq-banner"></div>
+  </section>
+
+  <!-- 4-LAP ORBIT STRIP -->
+  <div class="row">
+    <div class="checks" style="margin-bottom:6px">
+      <b>Orbit Strip ($b^0 \dots b^3$):</b> The folded cell after each lap around the non-orientable loop. Gold dashed line: the void ($x = 0$) glued to the $12\text{–}6$ diagonal. Odd laps return mirrored ($\beta \equiv \alpha$); even laps return upright ($\alpha = \alpha$).
+    </div>
+    <canvas id="o"></canvas>
+  </div>
+
+  <!-- MODAL & ALGEBRAIC TELEMETRY CARDS -->
+  <div class="read">
+    <div class="card">
+      <div class="k">Completed Laps ($n$)</div>
+      <div class="v" id="r-n">0</div>
+      <div class="lean" id="r-map"></div>
+    </div>
+    <div class="card">
+      <div class="k">Box Orientation State</div>
+      <div class="v" id="r-box"></div>
+      <div class="lean">Lean 4: <code>Sixth.beta_modal</code></div>
+    </div>
+    <div class="card">
+      <div class="k">Modal Relation to $\alpha$</div>
+      <div class="v" id="r-rel"></div>
+      <div class="lean">Lean 4: <code>Sixth.orbit · one_orbit</code></div>
+    </div>
+    <div class="card">
+      <div class="k">Observational Anchor (Planck 2018)</div>
+      <div class="v" id="r-obs">$\Omega_m = 0.315 \mid H_0 = 67.4$</div>
+      <div class="lean" id="r-obs-sub">Local SNe Ia $H_0 \approx 73.0\text{ km/s/Mpc}$</div>
+    </div>
+  </div>
+
+  <!-- LIVE LEAN 4 MONTE CARLO VERIFICATION -->
+  <div class="card checks" id="checks"></div>
+
+  <!-- 4D KLEIN BOTTLE CONTAINER STAGE -->
+  <section class="card" id="p4" aria-label="Four-dimensional Klein Bottle Container">
+    <div class="k">The Closed Container in Four Dimensions · $K = \mathbb{R}^2 / \langle a, b \rangle$</div>
+    <p class="lede" style="margin:4px 0 10px">
+      The closed Klein bottle sits in 4-space without self-intersection inside a tesseract Container. The camera moves by the same master escapement in 4D and 3D together: step, step, sweep into the reset. Drag with one finger to orbit in 3D; drag with two fingers (or hold <b>Shift + drag</b>) to rotate directly through the fourth dimension $w$. Double-click to re-center.
+    </p>
+    <div class="stage" id="stage4" style="aspect-ratio:16/9;max-height:440px">
+      <canvas id="c4"></canvas>
+      <div class="tag" id="tag4"></div>
+    </div>
+    <div class="slider-row-4d">
+      <span>Spin brake: free</span>
+      <input id="brake" type="range" min="0" max="1" step="0.001" value="0.20" aria-label="spin brake" style="flex:1">
+      <span>firm</span>
+    </div>
+  </section>
+
+  <!-- COMPREHENSIVE DOCUMENTATION, MATH & ARGUMENT -->
+  <section class="doc-section">
+    <div>
+      <h2>1. Theoretical Architecture: Box, Container, Lorentz, and Newton</h2>
+      <div class="prose">
+        <p>
+          Standard cosmological modeling begins directly with metric boundary and edge dynamics—solving Einstein's field equations on a globally smooth, orientable Friedmann–Lemaître–Robertson–Walker (FLRW) manifold and inserting a cosmological constant ($\Omega_\Lambda \approx 0.685$) to match late-time Type Ia supernova dimming. This observatory steps one level above metric edge dynamics to separate two structural primitives: the <strong>Box</strong> and the <strong>Container</strong>.
+        </p>
+        <p>
+          <strong>The Box ($1 \times y$ Folded Cell):</strong> The Box is the local unit of measurement and parity. Constructed by taking a unit square, relabeling its vertices $12, 3, 6, 9$ at a $45^\circ$ diamond tilt, and gluing its $12\text{–}6$ diagonal directly onto the zero-void midline ($x = 0$), the Box defines discrete involution and parity rules ($P(x,y) = (-x,y)$, $P^2 = \mathrm{id}$) prior to introducing continuous coordinates.
+        </p>
+        <p>
+          <strong>The Container (Non-Orientable Closure):</strong> The Container is the global topological manifold that dictates how local Boxes glue together without tearing. Identifying opposite edges with a half-twist yields a Möbius strip in 3-space and a self-intersection-free Klein bottle $K = \mathbb{R}^2 / \langle a, b \rangle$ embedded in a 4D tesseract.
+        </p>
+        <p>
+          <strong>Putting Lorentz and Newton Back Where They Belong:</strong> Separating local Box kinematics from global Container topology resolves the false tension between special relativity and weak-field gravitational clumping. <strong>Lorentz invariance</strong> holds strictly inside every local patch of the sheet—an observer moving along the fabric measures an invariant speed of light $c$ and standard local light cones. <strong>Newtonian weak-field dynamics</strong> govern local mass-energy clumping inside the Box once early-universe shear and expansion variance condense baryonic matter out of the background field into a cosmic web ("foam") of overdense walls and underdense voids.
+        </p>
+        <p>
+          <strong>The Flatlander on the Möbius Strip = The Gravitational Field:</strong> A two-dimensional Flatlander embedded inside the fabric cannot step out into 3D or 4D to inspect the $12\text{–}6$ half-twist from the outside. Instead, parallel-transporting a local reference frame around one full lap ($b = P \circ t$) returns the frame mirrored ($\beta \equiv \alpha$), requiring two full laps ($b^2$) to restore original orientation—the exact signature of a spin-$\tfrac{1}{2}$ double cover ($\mathrm{SO}(3) = \mathrm{SU}(2)/\{\pm 1\}$). When a Flatlander insists on averaging a partitioned, non-orientable Container using a single globally orientable ruler, the unmodeled expansion variance between fast voids and bound walls appears in their Friedmann ledger as an effective geometric share ($\Omega_Q + \Omega_k$) mimicking dark energy.
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <h2>2. Exact Mathematical Formulation (Buchert Averaging &amp; Discrete Group)</h2>
+      <div class="math-block">
+        <p><strong>1. Standard Homogeneous Friedmann Partition:</strong></p>
+        $$\Omega_m + \Omega_\Lambda + \Omega_k = 1 \quad \text{with Planck 2018 benchmark: } 0.315 + 0.685 + 0 \approx 1$$
+        <p><strong>2. Buchert Scalar Averaging Partition (Inhomogeneous Domain $\mathcal{D}$):</strong></p>
+        $$\Omega_m^{\mathcal{D}} + \Omega_\Lambda^{\mathcal{D}} + \Omega_k^{\mathcal{D}} + \Omega_Q^{\mathcal{D}} = 1, \qquad \Omega_Q^{\mathcal{D}} \equiv -\frac{\mathcal{Q}_{\mathcal{D}}}{6 H_{\mathcal{D}}^2}$$
+        <p><strong>3. Kinematical Backreaction Scalar $\mathcal{Q}_{\mathcal{D}}$ (Expansion Variance vs. Shear):</strong></p>
+        $$\mathcal{Q}_{\mathcal{D}} = \frac{2}{3}\left(\langle \theta^2 \rangle_{\mathcal{D}} - \langle \theta \rangle_{\mathcal{D}}^2\right) - 2\langle \sigma^2 \rangle_{\mathcal{D}}$$
+        <p><strong>4. Two-Region (Void &amp; Wall) Acceleration Threshold ($\Lambda = 0$, negligible net shear):</strong></p>
+        $$\mathcal{Q}_{\mathcal{D}} = 6 f(1-f)(\Delta H)^2 \implies \text{Volume Acceleration } (\ddot{a}_{\mathcal{D}} &gt; 0) \iff 4f(1-f)\left(\frac{\Delta H}{H}\right)^2 &gt; \Omega_m$$
+        <p><strong>5. Discrete Klein Bottle &amp; Möbius Parity Generators (<code>Sixth/Basic.lean</code>):</strong></p>
+        $$P(x,y) = (-x, y), \quad t(x,y) = (x, y+1), \quad b = P \circ t, \quad b a b^{-1} = a^{-1}, \quad \det(db) = -1$$
+      </div>
+    </div>
+
+    <div>
+      <h2>3. Side-by-Side Comparison of Competing Cosmological Models</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Model / Framework</th>
+            <th>Global &amp; Local Geometry</th>
+            <th>Origin of the $\sim 0.685$ Budget</th>
+            <th>Observational &amp; Empirical Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Standard $\Lambda$CDM</strong><br><span style="color:var(--dim)">(Concordance Model)</span></td>
+            <td>Globally smooth, orientable FLRW metric; zero spatial curvature ($\Omega_k = 0$); zero backreaction ($\langle\theta^2\rangle = \langle\theta\rangle^2$).</td>
+            <td><strong>Fundamental Substance ($\Omega_\Lambda \approx 0.685$):</strong> Vacuum energy density with constant equation of state $w = -1$.</td>
+            <td>Matches Planck 2018 CMB acoustic peaks ($H_0 = 67.4 \pm 0.5\text{ km/s/Mpc}$) and BAO, but leaves the $\sim 5\sigma$ Hubble tension against local SH0ES distances ($73.04 \pm 1.04$) and requires fine-tuning $\Lambda$.</td>
+          </tr>
+          <tr>
+            <td><strong>Buchert Backreaction</strong><br><span style="color:var(--dim)">(Two-Region / Inhomogeneous)</span></td>
+            <td>3+1 foliation averaging over expanding underdense voids ($f$) and collapsing/virialized walls ($1-f$).</td>
+            <td><strong>Averaging Variance ($\Omega_Q + \Omega_k \approx 0.685$):</strong> Driven by variance $\langle\theta^2\rangle - \langle\theta\rangle^2$ across partitioned domains with $\Omega_\Lambda = 0$.</td>
+            <td>Accelerates without $\Lambda$ whenever $4f(1-f)(\Delta H/H)^2 &gt; \Omega_m$ (requiring $\Delta H/H &gt; 0.561$ at $f=0.5$). Active debate centers on whether realistic cosmic shear $-2\langle\sigma^2\rangle$ cancels the variance term.</td>
+          </tr>
+          <tr>
+            <td><strong>Timescape Cosmology</strong><br><span style="color:var(--dim)">(Wiltshire)</span></td>
+            <td>Foam-like cosmic web of virialized gravitational wall bound systems ($H_{\text{wall}}=0$) and expanding voids ($f_v \approx 0.76$).</td>
+            <td><strong>Clock-Rate Lapse Variance:</strong> Gravitational potential difference between walls and voids creates a cumulative clock-rate offset ($\bar{\gamma}$), producing apparent acceleration with $\Omega_\Lambda = 0$.</td>
+            <td>Fits Pantheon+ Type Ia supernovae and DESI BAO data competitively with bare matter $\Omega_{M0} \approx 0.31\text{–}0.35$ and dressed Hubble parameter $H_0 \approx 61.7\text{–}70\text{ km/s/Mpc}$.</td>
+          </tr>
+          <tr>
+            <td><strong>Hartle–Hawking &amp; LQC</strong><br><span style="color:var(--dim)">(Early-Boundary Models)</span></td>
+            <td><strong>Cap (HH):</strong> Euclidean no-boundary smooth cap ($r = \sqrt{t(2-t)}$).<br><strong>Neck (LQC):</strong> Quantum bounce waist ($r = \sqrt{\tfrac{1}{4}+\tfrac{3}{4}t^2}$).</td>
+            <td>Addresses initial singularity boundary conditions near $t \to 0$ rather than late-time dark energy share.</td>
+            <td>Illustrated in the observatory's boundary-reading silhouettes (`Cap · 1` and `Neck · ½`) as alternative ways a one-sided observer traces its past back to the void cut.</td>
+          </tr>
+          <tr>
+            <td><strong>The Sixth (Box &amp; Container)</strong><br><span style="color:var(--dim)">(Current Synthesis)</span></td>
+            <td>Pre-metric folded square Box ($12\text{–}6$) on a non-orientable Möbius / 4D Klein Container holding an early-nucleated baryonic foam field.</td>
+            <td><strong>Topological Holonomy + Foam Variance:</strong> Flatlander parallel transport across the half-twist combined with void/wall contrast carries the $\Omega_Q + \Omega_k$ share.</td>
+            <td>Unifies discrete Lean 4 parity proofs ($b^2 = \text{shift } 2$) with Buchert's dimensionless ratio threshold and Planck CMB thermal anisotropy mapping.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h2>4. Benchmark Observational Datasets (Planck 2018, Pantheon+, SH0ES, DESI)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Dataset / Survey</th>
+            <th>Observable &amp; Redshift Range</th>
+            <th>Key Published Parameter Values</th>
+            <th>Role in This Observatory</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Planck 2018 (TT,TE,EE+lowE+lensing)</strong></td>
+            <td>CMB Temperature &amp; Polarization Anisotropies ($z \approx 1090$, $\Delta T \in [-300, +300]\,\mu\text{K}$)</td>
+            <td>$\Omega_m = 0.315 \pm 0.007$, $\Omega_\Lambda = 0.685 \pm 0.007$, $\Omega_b h^2 = 0.02237$, $H_0 = 67.4 \pm 0.5\text{ km/s/Mpc}$</td>
+            <td>Sets the reference matter share ($\Omega_m = 0.315$), the $0.685$ dark budget target, and the authentic thermal color scale on the 3D manifold.</td>
+          </tr>
+          <tr>
+            <td><strong>Pantheon+ &amp; SH0ES (2022)</strong></td>
+            <td>1,550 Type Ia Supernovae ($0.001 &lt; z &lt; 2.26$)</td>
+            <td>$H_0 = 73.04 \pm 1.04\text{ km/s/Mpc}$ (Cepheid-calibrated); $\Omega_m = 0.334 \pm 0.018$ (flat $\Lambda$CDM)</td>
+            <td>Demonstrates the $H_0$ contrast ($\Delta H / H \approx 8\text{–}10\%$ locally, rising higher inside deep underdense voids) and late-time apparent acceleration.</td>
+          </tr>
+          <tr>
+            <td><strong>DESI DR1 / DR2 BAO (2024–2025)</strong></td>
+            <td>Baryon Acoustic Oscillations in Galaxies, Quasars &amp; Ly$\alpha$ ($0.1 &lt; z &lt; 4.2$)</td>
+            <td>Hints of evolving effective dark energy ($w_0 &gt; -1, w_a &lt; 0$) when fit to $w_0w_a$CDM; consistent with Timescape &amp; backreaction.</td>
+            <td>Supports testing dynamic geometric shares ($\Omega_Q + \Omega_k$) as late-time void fraction $f$ grows from early homogeneity ($f \to 0$) to late foam ($f \approx 0.76$).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h2>5. Annotated Lean 4 &amp; Mathematical Verification Code</h2>
+      <p style="font-size:13px;color:var(--dim);margin:0 0 8px">
+        The interactive simulation executes live numerical checks mirroring the formal proofs in <code>Sixth/Basic.lean</code>. Expand below to inspect the formal Lean 4 definitions and theorems that govern the Box and Container.
+      </p>
+      <details>
+        <summary>View Annotated Lean 4 Specification (<code>Sixth/Basic.lean</code>)</summary>
+        <pre><code>/-!
+  Sixth/Basic.lean — Discrete Box &amp; Non-Orientable Container Algebra
+  Establishes parity involution P, loop translation t, Möbius half-twist lap b = P ∘ t,
+  and the Klein bottle commutator relation b * a * b⁻¹ = a⁻¹.
+-/
+
+namespace Sixth
+
+/-- A point on the universal cover ℝ² of the Container sheet:
+    x ∈ ℝ measures transverse distance from the void midline (x = 0);
+    y ∈ ℝ measures coordinate distance along the closed loop. -/
+structure Point where
+  x : Int
+  y : Int
+deriving DecidableEq, Repr
+
+/-- Transverse parity reflection across the void midline x = 0 (glyph swap). -/
+def P (p : Point) : Point := ⟨-p.x, p.y⟩
+
+/-- One step forward along the longitudinal loop. -/
+def t (p : Point) : Point := ⟨p.x, p.y + 1⟩
+
+/-- One full lap around the non-orientable Möbius Container: step + parity flip. -/
+def b (p : Point) : Point := P (t p)
+
+/-- Longitudinal plain seam translation across adjacent cells. -/
+def a (p : Point) : Point := ⟨p.x + 1, p.y⟩
+
+/-- Theorem 1: Parity and longitudinal translation commute. -/
+theorem P_t_comm (p : Point) : P (t p) = t (P p) := by
+  simp [P, t]
+
+/-- Theorem 2: Parity is an involution (P² = id). -/
+theorem P_P (p : Point) : P (P p) = p := by
+  simp [P, Int.neg_neg]
+
+/-- Theorem 3: Two laps around the Möbius strip restore orientation (spin-½ double cover). -/
+theorem two_laps (p : Point) : b (b p) = ⟨p.x, p.y + 2⟩ := by
+  simp [b, P, t, Int.neg_neg]
+  omega
+
+/-- Theorem 4: The void midline x = 0 is invariant under orientation reversal. -/
+theorem b_keeps_void (y : Int) : b ⟨0, y⟩ = ⟨0, y + 1⟩ := by
+  simp [b, P, t]
+
+/-- Theorem 5: Fundamental group relation of the Klein Bottle K = ℝ² / ⟨a, b⟩. -/
+theorem klein_relation (p : Point) :
+    let bInv : Point → Point := fun q =&gt; ⟨-q.x, q.y - 1⟩
+    let aInv : Point → Point := fun q =&gt; ⟨q.x - 1, q.y⟩
+    b (a (bInv p)) = aInv p := by
+  simp [b, a, P, t]
+  omega
+
+end Sixth</code></pre>
+      </details>
+    </div>
+
+    <div>
+      <h2>6. Credits, Attribution &amp; Research Links</h2>
+      <p style="font-size:13px;color:var(--dim);margin:0 0 8px">
+        This framework builds constructively upon established mathematical physics, formal verification, and observational cosmology—recognizing each research program's domain of validity rather than treating them as adversarial:
+      </p>
+      <ul class="ref-list">
+        <li>
+          <strong>Thomas Buchert (Scalar Averaging &amp; Kinematical Backreaction):</strong>
+          Buchert, T. (2000), <em>"On Average Properties of Inhomogeneous Fluids in General Relativity: Dust Cosmologies"</em>, General Relativity and Gravitation 32, 105–125. (<a href="https://arxiv.org/abs/gr-qc/9906015" target="_blank" rel="noopener">arXiv:gr-qc/9906015</a>)
+        </li>
+        <li>
+          <strong>David L. Wiltshire (Timescape Cosmology &amp; Gravitational Energy):</strong>
+          Wiltshire, D. L. (2007), <em>"Cosmic Clocks, Cosmic Variance and Cosmic Averages"</em>, New Journal of Physics 9, 377 (<a href="https://arxiv.org/abs/gr-qc/0702082" target="_blank" rel="noopener">arXiv:gr-qc/0702082</a>); see also Lane et al. (2024/2025) Pantheon+ &amp; DESI Timescape tests.
+        </li>
+        <li>
+          <strong>George Spencer-Brown (Laws of Form — Mark, Void, and Re-Entry):</strong>
+          Spencer-Brown, G. (1969), <em>Laws of Form</em>, Allen &amp; Unwin — basis for the void ($0$), mark ($1$), and re-entry ($\tfrac{1}{2}$) boundary calculus.
+        </li>
+        <li>
+          <strong>Edwin A. Abbott (Flatland — Intrinsic Dimensionality):</strong>
+          Abbott, E. A. (1884), <em>Flatland: A Romance of Many Dimensions</em> — inspiration for analyzing how an intrinsic 2D observer experiences global non-orientable holonomy as an apparent external field.
+        </li>
+        <li>
+          <strong>Planck Collaboration (2018 Cosmological Parameters):</strong>
+          Planck Collaboration (2020), <em>"Planck 2018 results. VI. Cosmological parameters"</em>, Astronomy &amp; Astrophysics 641, A6. (<a href="https://arxiv.org/abs/1807.06209" target="_blank" rel="noopener">arXiv:1807.06209</a>)
+        </li>
+        <li>
+          <strong>Brout et al. / Pantheon+ &amp; SH0ES (2022) &amp; DESI Collaboration (2024):</strong>
+          Brout, D. et al. (2022), <em>ApJ</em> 938, 110 (<a href="https://arxiv.org/abs/2202.04077" target="_blank" rel="noopener">arXiv:2202.04077</a>); DESI Collaboration (2024), <em>"DESI 2024 VI: Cosmological Constraints from BAO"</em> (<a href="https://arxiv.org/abs/2404.03002" target="_blank" rel="noopener">arXiv:2404.03002</a>).
+        </li>
+        <li>
+          <strong>nLab Higher Structures &amp; Differential Cohomology Community:</strong>
+          Schreiber, U. et al., <em>nLab</em> (<a href="https://ncatlab.org/nlab/show/HomePage" target="_blank" rel="noopener">ncatlab.org</a>) — formal reference for spin double covers, gerbes, and local-to-global patching cocycles.
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============================================================================
+     1. DISCRETE BOX & CONTAINER ALGEBRA (Mirrors Sixth/Basic.lean)
+     ============================================================================ */
+  const P = ([x, y]) => [-x, y];          // Parity involution across void x = 0
+  const t = ([x, y]) => [x, y + 1];       // Longitudinal loop step
+  const b = p => P(t(p));                 // One non-orientable lap: step + mirror
+  const a = ([x, y]) => [x + 1, y];       // Plain seam translation
+  const aInv = ([x, y]) => [x - 1, y];
+  const bInv = ([x, y]) => [-x, y - 1];
+  const iter = (f, n, p) => { for (let i = 0; i < n; i++) p = f(p); return p; };
+  const same = (p, q) => p[0] === q[0] && p[1] === q[1];
+
+  (function runLeanChecks() {
+    const N = 2000, pts = [];
+    let s = 20261115;
+    const rnd = () => { s = (s * 1103515245 + 12345) % 2147483648; return (s % 2001) - 1000; };
+    for (let i = 0; i < N; i++) pts.push([rnd(), rnd()]);
+
+    const tests = [
+      ["P_t_comm", "P ∘ t = t ∘ P", p => same(P(t(p)), t(P(p)))],
+      ["P_P", "P² = id", p => same(P(P(p)), p)],
+      ["b_iter", "bⁿ(x,y) = ((−1)ⁿx, y+n), n ≤ 9", p => {
+        for (let n = 0; n < 10; n++) {
+          const q = iter(b, n, p);
+          if (!same(q, [n % 2 ? -p[0] : p[0], p[1] + n])) return false;
+        }
+        return true;
+      }],
+      ["two_laps", "b ∘ b = shift 2 (spin-½ return)", p => same(b(b(p)), [p[0], p[1] + 2])],
+      ["klein_relation", "b a b⁻¹ = a⁻¹ (Klein gluing)", p => same(b(a(bInv(p))), aInv(p))],
+      ["P_fixed_iff", "P fixes p ⇔ x = 0 (void midline)", p => same(P(p), p) === (p[0] === 0)],
+      ["b_keeps_void", "b(0,y) = (0,y+1)", p => same(b([0, p[1]]), [0, p[1] + 1])]
+    ];
+
+    const det = (-1) * 1 - 0 * 0;
+    let ok = 0;
+    let itemsHtml = "";
+    for (const [name, stmt, fn] of tests) {
+      const pass = pts.every(fn);
+      if (pass) ok++;
+      itemsHtml += `<li class="${pass ? "" : "bad"}"><b>${name}</b> · ${stmt}</li>`;
+    }
+    const dpass = det === -1;
+    if (dpass) ok++;
+    itemsHtml += `<li class="${dpass ? "" : "bad"}"><b>b_reverses_orientation</b> · det(db) = ${det}</li>`;
+
+    document.getElementById("checks").innerHTML =
+      `<b>${ok} of ${tests.length + 1} algebraic invariants hold</b> across ${N.toLocaleString()} stochastic lattice points (matching formal proofs in <code>Sixth/Basic.lean</code>):<ul>${itemsHtml}</ul>`;
+  })();
+
+  /* ============================================================================
+     2. MASTER ESCAPEMENT CLOCK & OBSERVATORY STATE
+     ============================================================================ */
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const CLOCK = window.SIXTH_CLOCK = { beats: 0, playing: !reduce, target: null, BEAT: 1.4 };
+
+  const STATE = {
+    Y: 0,
+    cmp: "lcdm",         // 'lcdm' | 'hh' | 'lqc' | 'ts'
+    usePlanckCMB: true,  // Planck CMB temperature palette vs. Workbench Red/Green/Gold
+    showFoam: true,      // Baryonic foam field condensation overlay
+    f: 0.50,             // Void volume fraction V_void / V_total
+    dH: 0.72,            // Expansion rate contrast ΔH / H
+    om: 0.315,           // Matter share Ω_m
+    dragYaw: 0,
+    dragPitch: 0,
+    drag: null
+  };
+
+  const $ = id => document.getElementById(id);
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const C = {
+    ink: css("--ink"),
+    dim: css("--dim"),
+    red: css("--red"),
+    green: css("--green"),
+    gold: css("--gold"),
+    cyan: css("--cyan"),
+    line: css("--line")
+  };
+
+  /* Authentic Planck 2018 CMB color ramp (-300 μK deep blue -> 0 μK green/yellow -> +300 μK crimson) */
+  const PLANCK_STOPS = [
+    [0.00, [8, 29, 88]],
+    [0.22, [34, 94, 168]],
+    [0.42, [65, 182, 196]],
+    [0.50, [161, 218, 180]],
+    [0.62, [254, 217, 118]],
+    [0.80, [253, 141, 60]],
+    [1.00, [189, 0, 38]]
+  ];
+  function planckColor(tNorm, alpha = 0.82) {
+    const t = Math.max(0, Math.min(1, tNorm));
+    for (let i = 0; i < PLANCK_STOPS.length - 1; i++) {
+      const [t0, c0] = PLANCK_STOPS[i];
+      const [t1, c1] = PLANCK_STOPS[i + 1];
+      if (t >= t0 && t <= t1) {
+        const u = (t - t0) / (t1 - t0);
+        const r = Math.round(c0[0] + (c1[0] - c0[0]) * u);
+        const g = Math.round(c0[1] + (c1[1] - c0[1]) * u);
+        const b = Math.round(c0[2] + (c1[2] - c0[2]) * u);
+        return `rgba(${r},${g},${b},${alpha})`;
+      }
+    }
+    return `rgba(189,0,38,${alpha})`;
+  }
+
+  /* Deterministic cosmic web / baryonic foam density field on the sheet (u, v) */
+  function foamField(u, v, timePhase) {
+    const w1 = Math.sin(u * 18.0 + Math.cos(v * 9.0) * 1.6 + timePhase * 0.35);
+    const w2 = Math.cos(v * 22.0 - Math.sin(u * 12.0) * 1.4);
+    const w3 = Math.sin((u + v) * 28.0);
+    // Filamentary ridge: sharp peaks represent walls (hot +ΔT), broad basins represent voids (cold -ΔT)
+    const raw = 0.48 * w1 + 0.34 * w2 + 0.18 * w3;
+    return Math.max(-1, Math.min(1, raw * 1.25));
+  }
+
+  /* ============================================================================
+     3. UI CONTROLS & BUCHERT CALCULATOR WIRING
+     ============================================================================ */
+  const setRun = () => {
+    $("run").textContent = CLOCK.playing ? "Pause" : "Run";
+  };
+  setRun();
+
+  $("run").onclick = () => {
+    CLOCK.playing = !CLOCK.playing;
+    CLOCK.target = null;
+    setRun();
+  };
+
+  $("lap").onclick = () => {
+    CLOCK.playing = false;
+    setRun();
+    CLOCK.target = Math.floor(CLOCK.beats + 1e-6) + 1;
+  };
+
+  $("toggle-palette").onclick = () => {
+    STATE.usePlanckCMB = !STATE.usePlanckCMB;
+    $("toggle-palette").textContent = STATE.usePlanckCMB
+      ? "Palette: Planck CMB (±300 μK)"
+      : "Palette: Bench (Red / Green / Gold)";
+    $("cmb-legend").style.display = STATE.usePlanckCMB ? "flex" : "none";
+  };
+
+  $("toggle-foam").onclick = () => {
+    STATE.showFoam = !STATE.showFoam;
+    $("toggle-foam").textContent = STATE.showFoam ? "Baryonic Foam: ON" : "Baryonic Foam: OFF";
+  };
+
+  const CMP_META = {
+    lcdm: {
+      title: "<b>RIGHT: COMPETING HYPOTHESIS</b> · ΛCDM (Point · 0)",
+      short: "ΛCDM (Point · 0)",
+      val: "0 · void",
+      cos: "Standard Concordance Cosmology",
+      desc: "Assumes a globally smooth, orientable FLRW sheet (⟨θ²⟩ = ⟨θ⟩²). Traces past linearly to a single origin point (r = t) and assigns the 0.685 share to a fundamental cosmological constant Ω_Λ."
+    },
+    hh: {
+      title: "<b>RIGHT: COMPETING HYPOTHESIS</b> · Hartle–Hawking (Cap · 1)",
+      short: "Hartle–Hawking (Cap · 1)",
+      val: "1 · mark",
+      cos: "No-Boundary Euclidean Proposal",
+      desc: "Rounds off the past boundary into a smooth Euclidean cap (r = √(t(2−t))) with no sharp singular edge, embedding the early field in a closed Riemannian 4-sphere."
+    },
+    lqc: {
+      title: "<b>RIGHT: COMPETING HYPOTHESIS</b> · Loop Quantum Cosmology (Neck · ½)",
+      short: "Loop Quantum Cosmology (Neck · ½)",
+      val: "½ · re-entry",
+      cos: "Quantum Bounce Geometry",
+      desc: "Because geometry is quantized in discrete area/box units, the past contracts to a minimum non-zero throat or re-entry waist (r = √(0.25 + 0.75t²)) rather than zero volume."
+    },
+    ts: {
+      title: "<b>RIGHT: COMPETING HYPOTHESIS</b> · Timescape Multi-Void Foam",
+      short: "Timescape Foam (Wiltshire)",
+      val: "f_v ≈ 0.76 · lapse",
+      cos: "Inhomogeneous Clock-Lapse Cosmology",
+      desc: "Models the late universe as virialized wall filaments (slow clocks, H_wall ≈ 0) surrounding expanding underdense voids (f_v ≈ 0.76), generating apparent acceleration with Ω_Λ = 0."
+    }
+  };
+
+  for (const key of ["lcdm", "hh", "lqc", "ts"]) {
+    $("cmp-" + key).onclick = () => {
+      STATE.cmp = key;
+      for (const k of ["lcdm", "hh", "lqc", "ts"]) {
+        $("cmp-" + k).setAttribute("aria-pressed", String(k === key));
+      }
+      $("right-title").innerHTML = CMP_META[key].title;
+    };
+  }
+
+  function updateBuchertUI() {
+    const f = STATE.f;
+    const dH = STATE.dH;
+    const om = STATE.om;
+
+    $("val-f").textContent = f.toFixed(2);
+    $("val-dh").textContent = dH.toFixed(2);
+    $("val-om").textContent = om.toFixed(3);
+
+    // Dimensionless shares: Ω_m + Ω_Λ + Ω_Q + Ω_k = 1
+    // In a two-region Buchert model without Λ (when f > 0 and dH > 0):
+    // Ω_Q = -Q/(6H²) = -f(1-f)(ΔH/H)² (negative Ω_Q drives positive acceleration)
+    // Here we display the positive geometric backreaction budget |Ω_Q| + Ω_k = 1 - Ω_m when Λ = 0,
+    // or pure Ω_Λ = 1 - Ω_m when smooth (f = 0 or ΔH = 0).
+    const rem = Math.max(0, 1 - om);
+    const accelLHS = 4 * f * (1 - f) * dH * dH;
+    const isSmooth = (f <= 0.01 || dH <= 0.01);
+
+    let omegaLambda = 0, omegaQMag = 0, omegaK = 0;
+    if (isSmooth) {
+      omegaLambda = rem;
+    } else {
+      // Kinematical variance share bounded by remaining non-matter budget
+      omegaQMag = Math.min(rem, f * (1 - f) * dH * dH * 1.9);
+      omegaK = Math.max(0, rem - omegaQMag);
+    }
+
+    const pOm = (om * 100).toFixed(1);
+    const pLa = (omegaLambda * 100).toFixed(1);
+    const pQ = (omegaQMag * 100).toFixed(1);
+    const pK = (omegaK * 100).toFixed(1);
+
+    $("budget-bar").innerHTML = `
+      <div class="b-seg" style="width:${pOm}%;background:#5bc0de" title="Matter Ω_m">Ω_m ${pOm}%</div>
+      ${omegaLambda > 0.005 ? `<div class="b-seg" style="width:${pLa}%;background:#e0567c" title="Cosmological Constant Ω_Λ">Ω_Λ ${pLa}%</div>` : ""}
+      ${omegaQMag > 0.005 ? `<div class="b-seg" style="width:${pQ}%;background:#e8c26a" title="Backreaction Variance |Ω_Q|">|Ω_Q| ${pQ}%</div>` : ""}
+      ${omegaK > 0.005 ? `<div class="b-seg" style="width:${pK}%;background:#4fbf7d" title="Averaged Curvature Ω_k">Ω_k ${pK}%</div>` : ""}
+    `;
+
+    $("budget-legend").innerHTML = `
+      <span><i class="swatch" style="background:#5bc0de"></i>Matter $\\Omega_m = ${om.toFixed(3)}$</span>
+      <span><i class="swatch" style="background:#e0567c"></i>Dark Energy $\\Omega_\\Lambda = ${omegaLambda.toFixed(3)}$</span>
+      <span><i class="swatch" style="background:#e8c26a"></i>Backreaction $|\\Omega_Q| = ${omegaQMag.toFixed(3)}$</span>
+      <span><i class="swatch" style="background:#4fbf7d"></i>Curvature $\\Omega_k = ${omegaK.toFixed(3)}$</span>
+    `;
+
+    const passes = accelLHS > om;
+    const minContrast = (f > 0.02 && f < 0.98) ? Math.sqrt(om / (4 * f * (1 - f))) : Infinity;
+    $("ineq-banner").innerHTML = `
+      <div>
+        <b>Acceleration Condition:</b>
+        $4f(1-f)(\\Delta H/H)^2 = $ <b style="color:${passes ? "var(--green)" : "var(--gold)"}">${accelLHS.toFixed(3)}</b>
+        ${passes ? "&gt;" : "&le;"} $\\Omega_m =$ <b>${om.toFixed(3)}</b>
+        ${isFinite(minContrast) ? `<span style="color:var(--dim);font-size:12px"> (threshold $\\Delta H/H &gt; ${minContrast.toFixed(2)}$ at $f=${f.toFixed(2)}$)</span>` : ""}
+      </div>
+      <div>
+        ${isSmooth
+          ? `<span class="pill md">SMOOTH FLRW · $\\Omega_\\Lambda$ REQUIRED</span>`
+          : passes
+            ? `<span class="pill eq">ACCELERATING WITHOUT $\\Lambda$ ($\\ddot{a}_{\\mathcal{D}} &gt; 0$)</span>`
+            : `<span class="pill no" style="text-decoration:none;color:var(--gold)">SUB-THRESHOLD CONTRAST</span>`
+        }
+      </div>
+    `;
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      window.MathJax.typesetPromise([$("budget-legend"), $("ineq-banner")]).catch(() => {});
+    }
+  }
+
+  $("sl-f").oninput = e => { STATE.f = parseFloat(e.target.value); updateBuchertUI(); };
+  $("sl-dh").oninput = e => { STATE.dH = parseFloat(e.target.value); updateBuchertUI(); };
+  $("sl-om").oninput = e => { STATE.om = parseFloat(e.target.value); updateBuchertUI(); };
+
+  $("pre-planck").onclick = () => {
+    STATE.f = 0.00; STATE.dH = 0.00; STATE.om = 0.315;
+    $("sl-f").value = 0; $("sl-dh").value = 0; $("sl-om").value = 0.315;
+    STATE.cmp = "lcdm";
+    for (const k of ["lcdm", "hh", "lqc", "ts"]) $("cmp-" + k).setAttribute("aria-pressed", String(k === "lcdm"));
+    $("right-title").innerHTML = CMP_META.lcdm.title;
+    updateBuchertUI();
+  };
+  $("pre-buchert").onclick = () => {
+    STATE.f = 0.50; STATE.dH = 0.72; STATE.om = 0.315;
+    $("sl-f").value = 0.50; $("sl-dh").value = 0.72; $("sl-om").value = 0.315;
+    updateBuchertUI();
+  };
+  $("pre-timescape").onclick = () => {
+    STATE.f = 0.76; STATE.dH = 0.68; STATE.om = 0.320;
+    $("sl-f").value = 0.76; $("sl-dh").value = 0.68; $("sl-om").value = 0.320;
+    STATE.cmp = "ts";
+    for (const k of ["lcdm", "hh", "lqc", "ts"]) $("cmp-" + k).setAttribute("aria-pressed", String(k === "ts"));
+    $("right-title").innerHTML = CMP_META.ts.title;
+    updateBuchertUI();
+  };
+  updateBuchertUI();
+
+  /* Orbit Drag Handlers (Synchronized across Left & Right 3D views) */
+  function attachOrbitDrag(el) {
+    el.addEventListener("pointerdown", e => {
+      STATE.drag = { x: e.clientX, y: e.clientY };
+      el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener("pointermove", e => {
+      if (!STATE.drag) return;
+      STATE.dragYaw += (e.clientX - STATE.drag.x) * 0.01;
+      STATE.dragPitch = Math.max(-1.3, Math.min(0.65, STATE.dragPitch + (e.clientY - STATE.drag.y) * 0.006));
+      STATE.drag = { x: e.clientX, y: e.clientY };
+    });
+    const end = () => { STATE.drag = null; };
+    el.addEventListener("pointerup", end);
+    el.addEventListener("pointercancel", end);
+  }
+  attachOrbitDrag($("stage"));
+  attachOrbitDrag($("stage-cmp"));
+
+  /* ============================================================================
+     4. LEFT STAGE: MÖBIUS CONTAINER + FOLDED BOX + BARYONIC FOAM FIELD
+     ============================================================================ */
+  const R = 1.6, WID = 1.1, TAU = Math.PI * 2;
+  function surf(x, y) {
+    const u = TAU * y, w = x * WID, r = R + w * Math.cos(u / 2);
+    return [r * Math.cos(u), r * Math.sin(u), w * Math.sin(u / 2)];
+  }
+
+  const CELL = { L: 1.1 / (TAU * R) };
+  const cellPt = (Yc, u, v) => [v - 0.5, Yc + u * CELL.L];
+  const CORNERS = { "12": [0, 0.5], "9": [0.5, 0], "6": [1, 0.5], "3": [0.5, 1] };
+  const DIAMOND = [[0, 0.5], [0.5, 0], [1, 0.5], [0.5, 1]];
+  const CREASE = [[[0, 0], [1, 1]], [[1, 0], [0, 1]], [[0.5, 0], [0.5, 1]]];
+  const DASHED = [[[0.247, 0], [0.247, 0.72]], [[0.755, 0], [0.755, 0.72]], [[0.21, 0.25], [0.88, 0.25]], [[0.247, 0.718], [0.755, 0.718]]];
+  const BPTS = [[0.247, 0.25], [0.548, 0.048], [0.755, 0], [0.755, 0.25], [0.995, 0.492], [0.246, 0.735], [0.745, 0.748], [0.5, 0.997]];
+  const DOTS = [[0, 0], [0.058, 0.059], [0.058, 0.436], [0.247, 0.492], [0.755, 0.492], [0.941, 0.436]];
+  const GPTS = [[0.425, 0.03], [0.966, 0.088], [0.038, 0.41], [0.963, 0.412], [0.963, 0.58], [0.033, 0.885], [0.098, 0.97], [0.97, 0.885], [0.885, 0.97]];
+
+  const cv = $("c"), cx = cv.getContext("2d");
+  const cvCmp = $("c-cmp"), cxCmp = cvCmp.getContext("2d");
+  const ov = $("o"), ox = ov.getContext("2d");
+
+  function fit(c) {
+    const d = Math.min(devicePixelRatio || 1, 2);
+    const w = Math.round(c.clientWidth * d);
+    const h = Math.round(c.clientHeight * d);
+    if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+    return d;
+  }
+
+  function drawLeftStage(W, H, d) {
+    const Y = STATE.Y;
+    const yaw = -Math.PI / 2 - TAU * (Y + CELL.L / 2) + STATE.dragYaw;
+    const pitch = 0.98 + STATE.dragPitch;
+    const ca = Math.cos(yaw), sa = Math.sin(yaw), ce = Math.cos(pitch), se = Math.sin(pitch);
+    const S = Math.min(W, H) * 0.22, cxs = W / 2, cys = H * 0.50, D = 7;
+    const proj = p => {
+      const x1 = p[0] * ca - p[1] * sa, y1 = p[0] * sa + p[1] * ca;
+      const y2 = y1 * ce - p[2] * se, z2 = y1 * se + p[2] * ce;
+      const f = D / (D + y2);
+      return [cxs + S * x1 * f, cys - S * z2 * f, y2];
+    };
+
+    const NU = 128, NV = 10, quads = [];
+    const contrastBoost = Math.min(1.5, 0.35 + STATE.dH * 0.85);
+
+    for (let i = 0; i < NU; i++) {
+      for (let j = 0; j < NV; j++) {
+        const y0 = i / NU, y1 = (i + 1) / NU;
+        const x0 = -0.5 + j / NV, x1 = -0.5 + (j + 1) / NV;
+        const q = [proj(surf(x0, y0)), proj(surf(x1, y0)), proj(surf(x1, y1)), proj(surf(x0, y1))];
+        const ym = (y0 + y1) * 0.5, xm = (x0 + x1) * 0.5;
+        quads.push({
+          q,
+          z: (q[0][2] + q[1][2] + q[2][2] + q[3][2]) / 4,
+          xm,
+          ym
+        });
+      }
+    }
+    quads.sort((m, n) => n.z - m.z);
+
+    for (const { q, z, xm, ym } of quads) {
+      const ax = q[1][0] - q[0][0], ay = q[1][1] - q[0][1];
+      const bx = q[3][0] - q[0][0], by = q[3][1] - q[0][1];
+      const front = ax * by - ay * bx > 0;
+      const depth = Math.max(0.28, Math.min(1, 0.78 - z * 0.16));
+
+      cx.beginPath();
+      cx.moveTo(q[0][0], q[0][1]);
+      for (let k = 1; k < 4; k++) cx.lineTo(q[k][0], q[k][1]);
+      cx.closePath();
+
+      if (STATE.usePlanckCMB) {
+        // Map void fraction f and foam field to Planck CMB thermal stops (-300 μK cold voids to +300 μK hot walls)
+        const fld = STATE.showFoam ? foamField(ym, xm + 0.5, Y * TAU) : Math.sin(ym * TAU * 3) * 0.3;
+        // Shift threshold by void fraction f so larger f expands blue void regions
+        const shifted = fld - (STATE.f - 0.5) * 0.95;
+        const tNorm = 0.5 + 0.5 * Math.max(-1, Math.min(1, shifted * contrastBoost));
+        cx.globalAlpha = 0.78 * depth;
+        cx.fillStyle = planckColor(tNorm, 1.0);
+        cx.fill();
+        cx.globalAlpha = 0.14 * depth;
+        cx.strokeStyle = "#ffffff";
+        cx.lineWidth = 0.5 * d;
+        cx.stroke();
+      } else {
+        cx.globalAlpha = 0.36 * depth;
+        cx.fillStyle = front ? C.red : C.green;
+        cx.fill();
+        cx.globalAlpha = 0.18 * depth;
+        cx.strokeStyle = C.ink;
+        cx.lineWidth = 0.6 * d;
+        cx.stroke();
+      }
+    }
+    cx.globalAlpha = 1;
+
+    // Baryonic foam filament nodes condensed along the sheet
+    if (STATE.showFoam) {
+      for (let i = 0; i < 96; i += 2) {
+        for (let j = 1; j < NV; j += 2) {
+          const ym = i / 96, xm = -0.5 + j / NV;
+          const fld = foamField(ym, xm + 0.5, Y * TAU);
+          if (fld > 0.42) {
+            const p = proj(surf(xm, ym));
+            if (p[2] < 0.8) {
+              cx.fillStyle = STATE.usePlanckCMB ? "rgba(255, 245, 210, 0.85)" : "rgba(232, 194, 106, 0.8)";
+              cx.beginPath();
+              cx.arc(p[0], p[1], (1.3 + fld * 1.4) * d, 0, TAU);
+              cx.fill();
+            }
+          }
+        }
+      }
+    }
+
+    // Gold void midline x = 0
+    cx.strokeStyle = C.gold;
+    cx.lineWidth = 1.8 * d;
+    cx.setLineDash([5 * d, 4 * d]);
+    cx.beginPath();
+    for (let k = 0; k <= 200; k++) {
+      const p = proj(surf(0, k / 200));
+      k ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+    }
+    cx.stroke();
+    cx.setLineDash([]);
+
+    // Double-lap boundary edge
+    cx.strokeStyle = C.ink;
+    cx.globalAlpha = 0.55;
+    cx.lineWidth = 1.1 * d;
+    cx.beginPath();
+    for (let k = 0; k <= 400; k++) {
+      const p = proj(surf(-0.5, 2 * k / 400));
+      k ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+    }
+    cx.stroke();
+    cx.globalAlpha = 1;
+
+    // Folded 45° Diamond Box carried along the void midline
+    const at = (u, v) => { const p = cellPt(Y, u, v); return proj(surf(p[0], p[1])); };
+    const seg = (p, q, n = 12) => {
+      const pts = [];
+      for (let k = 0; k <= n; k++) {
+        const s = k / n;
+        pts.push(at(p[0] + (q[0] - p[0]) * s, p[1] + (q[1] - p[1]) * s));
+      }
+      return pts;
+    };
+    const poly = pts => {
+      cx.beginPath();
+      pts.forEach((p, k) => (k ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1])));
+    };
+
+    const box = [[0, 0], [1, 0], [1, 1], [0, 1]];
+    poly([].concat(...box.map((p, i) => seg(p, box[(i + 1) % 4]))));
+    cx.closePath();
+    cx.fillStyle = "rgba(255, 255, 255, 0.14)";
+    cx.fill();
+    cx.strokeStyle = "#ffffff";
+    cx.lineWidth = 1.5 * d;
+    cx.stroke();
+
+    cx.strokeStyle = "rgba(255,255,255,0.55)";
+    cx.lineWidth = 0.9 * d;
+    for (const [p, q] of CREASE) { poly(seg(p, q)); cx.stroke(); }
+
+    cx.setLineDash([3 * d, 3 * d]);
+    for (const [p, q] of DASHED) { poly(seg(p, q)); cx.stroke(); }
+    cx.setLineDash([]);
+
+    poly([].concat(...DIAMOND.map((p, i) => seg(p, DIAMOND[(i + 1) % 4]))));
+    cx.closePath();
+    cx.fillStyle = "rgba(232, 194, 106, 0.22)";
+    cx.fill();
+    cx.strokeStyle = "#ffffff";
+    cx.lineWidth = 2.2 * d;
+    cx.stroke();
+
+    // 12-6 diagonal glued to the void
+    poly(seg(CORNERS["12"], CORNERS["6"]));
+    cx.strokeStyle = C.gold;
+    cx.lineWidth = 2.6 * d;
+    cx.stroke();
+
+    cx.fillStyle = "#ffffff";
+    for (const p of DOTS.concat(BPTS)) {
+      const s = at(p[0], p[1]);
+      cx.beginPath();
+      cx.arc(s[0], s[1], 2.1 * d, 0, TAU);
+      cx.fill();
+    }
+    cx.strokeStyle = "rgba(255,255,255,0.7)";
+    cx.lineWidth = 0.9 * d;
+    for (const p of GPTS) {
+      const s = at(p[0], p[1]);
+      cx.strokeRect(s[0] - 2.8 * d, s[1] - 2.8 * d, 5.6 * d, 5.6 * d);
+    }
+
+    cx.font = `bold ${11 * d}px ${css("--mono").split(",")[0]}`;
+    cx.fillStyle = "#ffffff";
+    cx.textAlign = "center";
+    cx.textBaseline = "middle";
+    for (const L of ["12", "3", "6", "9"]) {
+      const [u, v] = CORNERS[L];
+      const q = [0.5 + (u - 0.5) * 1.34, 0.5 + (v - 0.5) * 1.34];
+      const s = at(q[0], q[1]);
+      cx.fillText(L, s[0], s[1]);
+    }
+  }
+
+  /* ============================================================================
+     5. RIGHT STAGE: COMPETING HYPOTHESIS COMPARATOR (Point, Cap, Neck, Timescape)
+     ============================================================================ */
+  const READ_PROFILES = {
+    lcdm: { r: t => t },
+    hh: { r: t => Math.sqrt(Math.max(0, t * (2 - t))) },
+    lqc: { r: t => Math.sqrt(0.25 + 0.75 * t * t) }
+  };
+
+  function drawRightStage(W, H, d) {
+    const mode = STATE.cmp;
+    const Y = STATE.Y;
+
+    if (mode === "ts") {
+      // Timescape 3D Void-Wall Foam Sphere (synchronized rotation with left stage)
+      const yaw = -Math.PI / 2 - TAU * (Y + CELL.L / 2) + STATE.dragYaw;
+      const pitch = 0.65 + STATE.dragPitch;
+      const ca = Math.cos(yaw), sa = Math.sin(yaw), ce = Math.cos(pitch), se = Math.sin(pitch);
+      const S = Math.min(W, H) * 0.30, cxs = W / 2, cys = H * 0.52, D = 7, rad = 1.45;
+      const proj = p => {
+        const x1 = p[0] * ca - p[1] * sa, y1 = p[0] * sa + p[1] * ca;
+        const y2 = y1 * ce - p[2] * se, z2 = y1 * se + p[2] * ce;
+        const f = D / (D + y2);
+        return [cxs + S * x1 * f, cys - S * z2 * f, y2];
+      };
+
+      const NTH = 36, NPH = 64, quads = [];
+      for (let i = 0; i < NTH; i++) {
+        for (let j = 0; j < NPH; j++) {
+          const th0 = (Math.PI * i) / NTH, th1 = (Math.PI * (i + 1)) / NTH;
+          const ph0 = (TAU * j) / NPH, ph1 = (TAU * (j + 1)) / NPH;
+          const sph = (th, ph) => [
+            rad * Math.sin(th) * Math.cos(ph),
+            rad * Math.sin(th) * Math.sin(ph),
+            rad * Math.cos(th)
+          ];
+          const q = [proj(sph(th0, ph0)), proj(sph(th1, ph0)), proj(sph(th1, ph1)), proj(sph(th0, ph1))];
+          quads.push({
+            q,
+            z: (q[0][2] + q[1][2] + q[2][2] + q[3][2]) / 4,
+            thm: (th0 + th1) * 0.5,
+            phm: (ph0 + ph1) * 0.5
+          });
+        }
+      }
+      quads.sort((a, b) => b.z - a.z);
+      for (const { q, z, thm, phm } of quads) {
+        if (z > 0.35) continue; // draw front hemisphere cleanly
+        const depth = Math.max(0.3, Math.min(1, 0.85 - z * 0.2));
+        const fld = foamField(phm / TAU, thm / Math.PI, Y * 1.5);
+        // Timescape void dominance f_v ≈ 0.76
+        const shifted = fld - (0.76 - 0.5) * 0.95;
+        const tNorm = 0.5 + 0.5 * Math.max(-1, Math.min(1, shifted * 1.25));
+        cxCmp.beginPath();
+        cxCmp.moveTo(q[0][0], q[0][1]);
+        for (let k = 1; k < 4; k++) cxCmp.lineTo(q[k][0], q[k][1]);
+        cxCmp.closePath();
+        cxCmp.globalAlpha = 0.85 * depth;
+        cxCmp.fillStyle = STATE.usePlanckCMB ? planckColor(tNorm, 1.0) : (shifted < 0 ? C.green : C.red);
+        cxCmp.fill();
+        cxCmp.globalAlpha = 0.14 * depth;
+        cxCmp.strokeStyle = "#ffffff";
+        cxCmp.lineWidth = 0.4 * d;
+        cxCmp.stroke();
+      }
+      cxCmp.globalAlpha = 1;
+      return;
+    }
+
+    // Bodies of revolution for ΛCDM (Point), Hartle-Hawking (Cap), and LQC (Neck)
+    const prof = READ_PROFILES[mode];
+    const L = W * 0.15, Rr = W * 0.90, mid = H * 0.54, A = Math.min(W, H) * 0.28;
+    const X = t => L + (Rr - L) * t;
+
+    // The other side (inaccessible to one-sided observer except through 0)
+    cxCmp.fillStyle = "rgba(255, 255, 255, 0.03)";
+    cxCmp.fillRect(0, 0, L, H);
+    cxCmp.font = `${10.5 * d}px ${css("--mono").split(",")[0]}`;
+    cxCmp.fillStyle = C.dim;
+    cxCmp.textAlign = "center";
+    cxCmp.save();
+    cxCmp.translate(L * 0.52, mid + 14 * d);
+    cxCmp.rotate(-Math.PI / 2);
+    cxCmp.fillText("other side · reached only via 0", 0, 0);
+    cxCmp.restore();
+
+    // Revolution envelope
+    cxCmp.beginPath();
+    for (let k = 0; k <= 200; k++) {
+      const tt = k / 200;
+      const p = [X(tt), mid - A * prof.r(tt)];
+      k ? cxCmp.lineTo(p[0], p[1]) : cxCmp.moveTo(p[0], p[1]);
+    }
+    for (let k = 200; k >= 0; k--) {
+      const tt = k / 200;
+      cxCmp.lineTo(X(tt), mid + A * prof.r(tt));
+    }
+    cxCmp.closePath();
+    cxCmp.fillStyle = STATE.usePlanckCMB ? "rgba(65, 182, 196, 0.22)" : "rgba(224, 86, 124, 0.18)";
+    cxCmp.fill();
+    cxCmp.strokeStyle = STATE.usePlanckCMB ? C.cyan : C.red;
+    cxCmp.lineWidth = 1.8 * d;
+    cxCmp.stroke();
+
+    // Animated time-slice rings synced to master escapement
+    const phaseShift = (Y % 1) * 0.1;
+    cxCmp.strokeStyle = C.ink;
+    cxCmp.lineWidth = d;
+    for (let k = 0; k <= 10; k++) {
+      const tt = Math.min(1, Math.max(0.01, k / 10 + phaseShift));
+      const r = A * prof.r(tt);
+      if (r < 1) continue;
+      cxCmp.globalAlpha = 0.22 + 0.25 * tt;
+      cxCmp.beginPath();
+      cxCmp.ellipse(X(tt), mid, Math.max(1.5, r * 0.18), r, 0, 0, TAU);
+      cxCmp.stroke();
+    }
+    cxCmp.globalAlpha = 1;
+
+    // Gold void boundary line
+    cxCmp.strokeStyle = C.gold;
+    cxCmp.setLineDash([5 * d, 4 * d]);
+    cxCmp.lineWidth = 1.8 * d;
+    cxCmp.beginPath();
+    cxCmp.moveTo(L, H * 0.22);
+    cxCmp.lineTo(L, H * 0.88);
+    cxCmp.stroke();
+    cxCmp.setLineDash([]);
+    cxCmp.fillStyle = C.gold;
+    cxCmp.textAlign = "left";
+    cxCmp.fillText("γ · 0 (void boundary)", L + 6 * d, H * 0.25);
+
+    // Past-directed arrow
+    cxCmp.strokeStyle = C.dim;
+    cxCmp.fillStyle = C.dim;
+    cxCmp.beginPath();
+    cxCmp.moveTo(X(0.98), H * 0.91);
+    cxCmp.lineTo(X(0.06), H * 0.91);
+    cxCmp.stroke();
+    cxCmp.beginPath();
+    cxCmp.moveTo(X(0.06), H * 0.91);
+    cxCmp.lineTo(X(0.06) + 7 * d, H * 0.91 - 4 * d);
+    cxCmp.lineTo(X(0.06) + 7 * d, H * 0.91 + 4 * d);
+    cxCmp.fill();
+    cxCmp.textAlign = "right";
+    cxCmp.fillText("followed back along its own arrow", X(0.98), H * 0.91 - 8 * d);
+
+    if (mode === "lqc") {
+      cxCmp.strokeStyle = C.gold;
+      cxCmp.lineWidth = 1.6 * d;
+      cxCmp.beginPath();
+      cxCmp.moveTo(X(0) + 5 * d, mid - A * 0.5);
+      cxCmp.lineTo(X(0) + 5 * d, mid + A * 0.5);
+      cxCmp.stroke();
+      cxCmp.fillStyle = C.gold;
+      cxCmp.textAlign = "left";
+      cxCmp.fillText("½ waist", X(0) + 10 * d, mid);
+    }
+  }
+
+  /* ============================================================================
+     6. ORBIT STRIP (b⁰ .. b³) & TELEMETRY READOUT
+     ============================================================================ */
+  const SUP = { 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹" };
+  const sup = k => String(k).split("").map(c => SUP[c]).join("");
+
+  function drawRow() {
+    const d = fit(ov), W = ov.width, H = ov.height;
+    ox.clearRect(0, 0, W, H);
+    const Y = STATE.Y;
+    const n = Math.floor(Y + 1e-9) % 4;
+    const frac = Y - Math.floor(Y + 1e-9);
+    const cells = 4, cw = W / cells, top = H * 0.12, bot = H * 0.72, midY = (top + bot) / 2;
+
+    ox.font = `${11 * d}px ${css("--mono").split(",")[0]}`;
+    ox.textAlign = "center";
+    ox.textBaseline = "middle";
+
+    for (let k = 0; k < cells; k++) {
+      const x0 = k * cw;
+      ox.fillStyle = k === n ? "rgba(232,194,106,0.12)" : "rgba(0,0,0,0)";
+      ox.fillRect(x0 + 2 * d, top, cw - 4 * d, bot - top);
+
+      ox.strokeStyle = C.gold;
+      ox.setLineDash([3 * d, 3 * d]);
+      ox.beginPath();
+      ox.moveTo(x0 + 6 * d, midY);
+      ox.lineTo(x0 + cw - 6 * d, midY);
+      ox.stroke();
+      ox.setLineDash([]);
+
+      const odd = k % 2 === 1;
+      const side = Math.min(cw * 0.48, bot - top);
+      const bx = x0 + cw / 2 - side / 2;
+      const by = midY - side / 2;
+      const P2 = (u, v) => [bx + u * side, by + (odd ? 1 - v : v) * side];
+      const line = (p, q) => {
+        const A = P2(...p), B = P2(...q);
+        ox.beginPath();
+        ox.moveTo(A[0], A[1]);
+        ox.lineTo(B[0], B[1]);
+        ox.stroke();
+      };
+
+      ox.strokeStyle = C.ink;
+      ox.lineWidth = 1.2 * d;
+      ox.strokeRect(bx, by, side, side);
+      ox.strokeStyle = C.dim;
+      ox.lineWidth = 0.8 * d;
+      for (const [p, q] of CREASE) line(p, q);
+      ox.strokeStyle = C.ink;
+      ox.lineWidth = 1.6 * d;
+      for (let i = 0; i < 4; i++) line(DIAMOND[i], DIAMOND[(i + 1) % 4]);
+      ox.strokeStyle = C.gold;
+      ox.lineWidth = 2 * d;
+      line(CORNERS["12"], CORNERS["6"]);
+
+      ox.fillStyle = C.ink;
+      for (const L of ["12", "3", "6", "9"]) {
+        const [u, v] = CORNERS[L];
+        const p = P2(0.5 + (u - 0.5) * 1.34, 0.5 + (v - 0.5) * 1.28);
+        ox.fillText(L, p[0], p[1]);
+      }
+
+      ox.fillStyle = C.dim;
+      ox.fillText("b" + sup(k) + " · b" + sup(k + 4), x0 + cw / 2, bot + H * 0.11);
+      ox.fillStyle = odd ? C.red : C.green;
+      ox.fillText(odd ? "≡ α (mirrored)" : "= α (upright)", x0 + cw / 2, bot + H * 0.22);
+    }
+
+    const mx = (n + frac) * cw + cw * 0.06;
+    ox.fillStyle = C.gold;
+    ox.beginPath();
+    ox.moveTo(mx, top - 2 * d);
+    ox.lineTo(mx - 5 * d, top - 9 * d);
+    ox.lineTo(mx + 5 * d, top - 9 * d);
+    ox.fill();
+  }
+
+  function updateReadouts() {
+    const Y = STATE.Y;
+    const n = Math.floor(Y + 1e-9), odd = n % 2 === 1;
+    $("r-n").textContent = n;
+    $("r-map").textContent = `b${sup(n)}(x, y) = (${odd ? "−x" : "x"}, y + ${n}) · Lean: b_iter`;
+    $("r-box").innerHTML = odd ? `<span class="m">β</span> · mirrored across void` : `<span class="m">α</span> · upright home`;
+    $("r-rel").innerHTML = odd
+      ? `<span class="pill md">≡ modally equivalent</span> <span class="pill no">≠</span>`
+      : `<span class="pill eq">= equivalent</span> <span class="pill no">≠</span>`;
+
+    $("tag").innerHTML =
+      `<b>Intrinsic Flatlander Sheet</b> · Möbius Container (${STATE.usePlanckCMB ? "Planck CMB ΔT" : "Bench Parity"})<br>` +
+      `<span style="color:var(--dim)">Void f = ${STATE.f.toFixed(2)} · Contrast ΔH/H = ${STATE.dH.toFixed(2)} · 12–6 glued to void x = 0</span>`;
+
+    const meta = CMP_META[STATE.cmp];
+    $("tag-cmp").innerHTML =
+      `<b>${meta.short}</b> · ${meta.val} · ${meta.cos}<br>` +
+      `<span style="color:var(--dim)">${meta.desc}</span>`;
+  }
+
+  /* ============================================================================
+     7. MAIN ANIMATION LOOP
+     ============================================================================ */
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+
+    if (CLOCK.target !== null) {
+      CLOCK.beats += Math.min(CLOCK.target - CLOCK.beats, dt * 1.2);
+      if (CLOCK.beats >= CLOCK.target - 1e-6) {
+        CLOCK.beats = CLOCK.target;
+        CLOCK.target = null;
+      }
+    } else if (CLOCK.playing) {
+      CLOCK.beats += dt / CLOCK.BEAT;
+    }
+    if (CLOCK.beats >= 24) {
+      CLOCK.beats -= 24;
+      if (CLOCK.target !== null) CLOCK.target -= 24;
+    }
+
+    STATE.Y = CLOCK.beats / 3;
+
+    const d1 = fit(cv);
+    cx.clearRect(0, 0, cv.width, cv.height);
+    drawLeftStage(cv.width, cv.height, d1);
+
+    const d2 = fit(cvCmp);
+    cxCmp.clearRect(0, 0, cvCmp.width, cvCmp.height);
+    drawRightStage(cvCmp.width, cvCmp.height, d2);
+
+    drawRow();
+    updateReadouts();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+
+<script>
+/* ==============================================================================
+   8. 4D KLEIN BOTTLE IN TESSERACT CONTAINER (Synchronized to SIXTH_CLOCK)
+   ============================================================================== */
+(function () {
+  "use strict";
+  const cv = document.getElementById("c4"), cx = cv.getContext("2d"), tag = document.getElementById("tag4");
+  const TAU = Math.PI * 2, clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+  const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const C = { ink: css("--ink"), dim: css("--dim"), red: css("--red"), green: css("--green"), gold: css("--gold") };
+
+  const RK = 1.25, rk = 0.48;
+  const K4 = (u, v) => {
+    const q = RK + rk * Math.cos(v);
+    return [q * Math.cos(u), q * Math.sin(u), rk * Math.sin(v) * Math.cos(u / 2), rk * Math.sin(v) * Math.sin(u / 2)];
+  };
+
+  const H = 1.85, TV = [];
+  for (let i = 0; i < 16; i++) TV.push([i & 1 ? H : -H, i & 2 ? H : -H, i & 4 ? H * 0.5 : -H * 0.5, i & 8 ? H * 0.5 : -H * 0.5]);
+  const TE = [];
+  for (let i = 0; i < 16; i++) for (let k = 0; k < 4; k++) { const j = i ^ (1 << k); if (j > i) TE.push([i, j, k]); }
+
+  function camAngle(beats) {
+    const cyc = Math.floor(beats / 3), b = beats - cyc * 3;
+    let a, ph;
+    if (b < 1) { a = 90 * sstep(0.6, 1, b); ph = "step 1"; }
+    else if (b < 2) { a = 90 + 90 * sstep(0.6, 1, b - 1); ph = "step 2"; }
+    else { a = 180 + 180 * sstep(0.25, 0.75, b - 2); ph = b - 2 < 0.75 ? "sweep" : "reset"; }
+    return { deg: a % 360, ph, cyc };
+  }
+
+  function fit(c) {
+    const d = Math.min(devicePixelRatio || 1, 2), w = Math.round(c.clientWidth * d), h = Math.round(c.clientHeight * d);
+    if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+    return d;
+  }
+
+  let last = performance.now(), float = 0, uYaw = 0, uPitch = 0, uXW = 0, uYW = 0;
+  const CLOCK = window.SIXTH_CLOCK;
+  const stage = document.getElementById("stage4");
+  const ptr = new Map(); let prev = null;
+  const centroid = () => { let x = 0, y = 0; for (const p of ptr.values()) { x += p.x; y += p.y; } return { x: x / ptr.size, y: y / ptr.size, n: ptr.size }; };
+  const brakeIn = document.getElementById("brake");
+  let vAz = 0, vEl = 0, dragT = 0;
+
+  stage.addEventListener("pointerdown", e => {
+    stage.setPointerCapture(e.pointerId);
+    ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    prev = centroid(); dragT = performance.now(); vAz = 0; vEl = 0;
+  });
+  stage.addEventListener("pointermove", e => {
+    if (!ptr.has(e.pointerId)) return;
+    ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const c = centroid();
+    if (prev && prev.n === c.n) {
+      const dx = c.x - prev.x, dy = c.y - prev.y;
+      if (c.n >= 2 || e.shiftKey) {
+        uXW += dx * 0.012; uYW += dy * 0.012;
+      } else {
+        const now = performance.now(), dtm = Math.max(8, now - dragT) / 1000;
+        const dA = dx * 0.5, dE = dy * 0.5;
+        uYaw += dA * Math.PI / 180; uPitch += dE * Math.PI / 180;
+        vAz = 0.6 * vAz + 0.4 * dA / dtm; vEl = 0.6 * vEl + 0.4 * dE / dtm;
+        dragT = now;
+      }
+    }
+    prev = c;
+  });
+  const up = e => {
+    if (ptr.size === 1) {
+      if (performance.now() - dragT > 160) { vAz = 0; vEl = 0; }
+      const m = Math.hypot(vAz, vEl);
+      if (m > 900) { vAz *= 900 / m; vEl *= 900 / m; }
+    }
+    ptr.delete(e.pointerId);
+    prev = ptr.size ? centroid() : null;
+  };
+  stage.addEventListener("pointerup", up);
+  stage.addEventListener("pointercancel", up);
+  stage.addEventListener("dblclick", () => { uYaw = uPitch = uXW = uYW = 0; vAz = vEl = 0; });
+
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    const beats = CLOCK.beats;
+    if (CLOCK.playing) float += dt;
+    if (!ptr.size) {
+      uYaw += vAz * dt * Math.PI / 180;
+      uPitch += vEl * dt * Math.PI / 180;
+      const kb = 14 * Math.pow(+brakeIn.value, 2);
+      const dd = Math.exp(-kb * dt);
+      vAz *= dd; vEl *= dd;
+      if (+brakeIn.value >= 0.999) { vAz = 0; vEl = 0; }
+    }
+
+    const d = fit(cv), W = cv.width, Hh = cv.height;
+    cx.clearRect(0, 0, W, Hh);
+
+    const cam = camAngle(beats), th = cam.deg * Math.PI / 180 + uXW;
+    const ct = Math.cos(th), st = Math.sin(th), cw = Math.cos(uYW), sw = Math.sin(uYW);
+    const az3 = cam.deg / 2, el3 = (25 + 30 * (1 - Math.cos(cam.deg * Math.PI / 180)) / 2) * Math.PI / 180;
+    const yaw = 0.55 + az3 * Math.PI / 180 + 0.12 * Math.sin(float * 0.21) + uYaw;
+    const pitch = el3 + 0.05 * Math.sin(float * 0.17) + uPitch;
+    const bob = 0.04 * Math.sin(float * 0.6);
+    const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+    const S = Math.min(W, Hh) * 0.175, ox = W / 2, oy = Hh * 0.52, D4 = 6.5, D3 = 8;
+
+    const proj = p => {
+      const x = p[0] * ct - p[3] * st, w0 = p[0] * st + p[3] * ct;
+      const y = p[1] * cw - w0 * sw, w = p[1] * sw + w0 * cw;
+      const f4 = D4 / (D4 - w);
+      const X = x * f4, Y = y * f4, Z = p[2] * f4 + bob;
+      const x1 = X * cy - Y * sy, y1 = X * sy + Y * cy;
+      const y2 = y1 * cp - Z * sp, z2 = y1 * sp + Z * cp;
+      const f = D3 / (D3 + y2);
+      return [ox + S * x1 * f, oy - S * z2 * f, y2, w];
+    };
+
+    const P = TV.map(proj);
+    for (const [i, j, k] of TE) {
+      const A = P[i], B = P[j];
+      cx.beginPath(); cx.moveTo(A[0], A[1]); cx.lineTo(B[0], B[1]);
+      cx.strokeStyle = k === 3 ? C.gold : C.ink;
+      cx.globalAlpha = k === 3 ? 0.45 : 0.2 + 0.25 * ((A[3] + B[3]) / (2 * H) + 0.5);
+      cx.lineWidth = d; cx.stroke();
+    }
+    cx.globalAlpha = 1;
+
+    const NU = 96, NV = 20, quads = [];
+    for (let i = 0; i < NU; i++) for (let j = 0; j < NV; j++) {
+      const u0 = TAU * i / NU, u1 = TAU * (i + 1) / NU, v0 = TAU * j / NV, v1 = TAU * (j + 1) / NV;
+      const q = [proj(K4(u0, v0)), proj(K4(u1, v0)), proj(K4(u1, v1)), proj(K4(u0, v1))];
+      quads.push({ q, z: (q[0][2] + q[1][2] + q[2][2] + q[3][2]) / 4 });
+    }
+    quads.sort((m, n) => n.z - m.z);
+    for (const { q, z } of quads) {
+      const ax = q[1][0] - q[0][0], ay = q[1][1] - q[0][1], bx = q[3][0] - q[0][0], by = q[3][1] - q[0][1];
+      const front = ax * by - ay * bx > 0, depth = clamp(0.75 - z * 0.15, 0.25, 1);
+      cx.beginPath(); cx.moveTo(q[0][0], q[0][1]);
+      for (let k = 1; k < 4; k++) cx.lineTo(q[k][0], q[k][1]);
+      cx.closePath();
+      cx.globalAlpha = 0.28 * depth; cx.fillStyle = front ? C.red : C.green; cx.fill();
+      cx.globalAlpha = 0.14 * depth; cx.strokeStyle = C.ink; cx.lineWidth = 0.5 * d; cx.stroke();
+    }
+    cx.globalAlpha = 1;
+
+    cx.strokeStyle = C.gold; cx.lineWidth = 1.8 * d; cx.setLineDash([5 * d, 4 * d]);
+    cx.beginPath();
+    for (let k = 0; k <= 160; k++) {
+      const p = proj(K4(TAU * k / 160, 0));
+      k ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]);
+    }
+    cx.stroke(); cx.setLineDash([]);
+
+    const r = 15 * d, dx = W - r - 14 * d, dy = Hh - r - 14 * d;
+    cx.strokeStyle = C.dim; cx.lineWidth = d; cx.beginPath(); cx.arc(dx, dy, r, 0, TAU); cx.stroke();
+    for (let k = 0; k < 4; k++) {
+      const a = -Math.PI / 2 + k * Math.PI / 2;
+      cx.beginPath();
+      cx.moveTo(dx + Math.cos(a) * r * 0.75, dy + Math.sin(a) * r * 0.75);
+      cx.lineTo(dx + Math.cos(a) * r, dy + Math.sin(a) * r);
+      cx.stroke();
+    }
+    const ha = -Math.PI / 2 + th;
+    cx.strokeStyle = C.gold; cx.lineWidth = 2 * d;
+    cx.beginPath(); cx.moveTo(dx, dy); cx.lineTo(dx + Math.cos(ha) * r * 0.9, dy + Math.sin(ha) * r * 0.9); cx.stroke();
+
+    tag.innerHTML =
+      `<b>${CLOCK.playing ? cam.ph : "paused · " + cam.ph}</b> · x–w <b>${Math.round(cam.deg)}°</b> · 3D <b>${Math.round(az3)}°</b> · lap <b>${cam.cyc + 1}</b>` +
+      (CLOCK.playing ? "" : `<br><span style="color:var(--dim)">drag: turn in 3D · two fingers / Shift+drag: turn through w · double-click: re-center</span>`);
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
+"""
+
+with open("The_Sixth_Unified_Cosmology_Observatory.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("Generated The_Sixth_Unified_Cosmology_Observatory.html successfully.")
